@@ -19,45 +19,19 @@ export  default  class Swiper {
         this.initialize()
     }
 
+    //初始化
     initialize() {
         this.index = 0;
 
         this.initWidget();
         this.initEventListeners();
         this.loadElements(0);
+
+        //自动播放
         this.play();
     }
 
-    //循环
-    circle(index) {
-        return (this.num + (index % this.num)) % this.num
-    }
 
-    createElement(url) {
-        let element = this.imagePrototype.cloneNode(false)
-        element.draggable = false;
-        element.src = url;
-
-        $(element).addClass(this.options.slideContentClass);
-
-        setTimeout(()=> {
-            this.container[0].style.height = element.height + 'px';
-        }, 100);
-        return element
-    }
-
-    //加载
-    loadElements(index) {
-        let limit = Math.min(this.num, 2 * 2 + 1);
-        let j = index;
-        for (let i = 0; i < limit; i++) {
-            j += i * (i % 2 === 0 ? -1 : 1);
-            j = this.circle(j);
-            this.slides[j].appendChild(this.createElement(this.list[j]))
-        }
-    }
-
-    //初始化swiper
     initWidget() {
 
         this.container = $(this.options.container);
@@ -106,6 +80,33 @@ export  default  class Swiper {
                 : (this.index < index ? this.slideWidth : 0),
             0
         )
+    }
+
+    loadElements(index) {
+        let limit = Math.min(this.num, 2 * 2 + 1);
+        let j = index;
+        for (let i = 0; i < limit; i++) {
+            j += i * (i % 2 === 0 ? -1 : 1);
+            j = this.circle(j);
+            this.slides[j].appendChild(this.createElement(this.list[j]))
+        }
+    }
+
+    createElement(url) {
+        let element = this.imagePrototype.cloneNode(false);
+        element.draggable = false;
+        element.src = url;
+
+        $(element).addClass(this.options.slideContentClass);
+
+        setTimeout(()=> {
+            this.container[0].style.height = element.height + 'px';
+        }, 100);
+        return element
+    }
+
+    circle(index) {
+        return (this.num + (index % this.num)) % this.num
     }
 
     move(index, dist, speed) {
